@@ -1,0 +1,118 @@
+def menu():
+    print("\n--- Menú Principal ---")
+    print("1. Registrar Estudiante")
+    print("2. Login")
+    print("3. Gestionar Créditos")
+    print("4. Promedio del estudiante")
+    print("5. Calculadora de notas")
+    print("6. Consultar información del estudiante")
+    print("7. Noticias y eventos próximos de la UNAB")
+    print("8. Ingresar una queja")
+    print("9. Horas Libres Acumuladas")
+    print("10. Consultar Cursos Informáticos")
+    print("11. Consultar medios de contacto de la UNAB")
+    print("12. Consultar información sobre intercambios")
+    print("13. Consultar Semilleros de Investigación")
+    print("14. Reporte Académico General del Estudiante")
+    print("15. Créditos Faltantes para Grado")
+    print("16. Consultar Horarios y Rutas de los Buses")
+    print("17. Registro de Niveles de inglés")
+    print("18. Salir")
+
+print("¡Bienvenido a Nexus, el sistema de gestión de la comunidad UNAB!")
+print("Por favor, seleccione su perfil para continuar.\n")
+
+perfil = input("Escriba '1' si es Personal Administrativo, '2' si es Estudiante, o '3' si es Profesor >> ")
+
+if perfil == "1":
+    print("\nBienvenido, Personal Administrativo.")
+    id_usuario = input("Por favor, introduzca su ID de trabajador >> ")
+elif perfil == "2":
+    print("\nBienvenido, Estudiante.")
+    id_usuario = input("Por favor, introduzca su ID de estudiante >> ")
+elif perfil == "3":
+    print("\nBienvenido, Profesor.")
+    id_usuario = input("Por favor, introduzca su ID de profesor >> ")
+else:
+    print("Perfil no válido. Por favor, reinicie el sistema e intente nuevamente.")
+    exit()
+
+input("Presione Enter para desplegar el menú de opciones...")
+
+while True:
+    menu()
+    opcion = input("Por favor inserta un número >> ")
+
+    if opcion == "1":
+        print("Registro de un nuevo estudiante.")
+        # Ingresar datos de nuevo estudiante
+        input("Pulsa una tecla para continuar")
+    elif opcion == "2":
+        print("Iniciar sesión.")
+        # Función para iniciar sesión
+        input("Pulsa una tecla para continuar")
+    elif opcion == "3":
+        print("Gestión de Créditos para Grado.")
+        # Función para gestionar créditos
+        input("Pulsa una tecla para continuar")
+    elif opcion == "4":
+        print("Promedio del estudiante.")
+        # Función para consultar promedios
+        input("Pulsa una tecla para continuar")
+    elif opcion == "5":
+        print("Calculadora de notas.")
+        # Función para calcular notas
+        input("Pulsa una tecla para continuar")
+    elif opcion == "6":
+        print("Consultar información del estudiante.")
+        # Función para consultar información del estudiante
+        input("Pulsa una tecla para continuar")
+    elif opcion == "7":
+        print("Noticias y eventos próximos de la UNAB.")
+        # Función para mostrar noticias y eventos
+        input("Pulsa una tecla para continuar")
+    elif opcion == "8":
+        print("Ingresar una queja.")
+        # Función para ingresar quejas
+        input("Pulsa una tecla para continuar")
+    elif opcion == "9":
+        print("Horas Libres Acumuladas.")
+        # Función para gestionar horas libres
+        input("Pulsa una tecla para continuar")
+    elif opcion == "10":
+        print("Registro de Cursos Informáticos.")
+        # Función para registrar cursos informáticos
+        input("Pulsa una tecla para continuar")
+    elif opcion == "11":
+        print("Consultar medios de contacto de la UNAB.")
+        # Función para consultar medios de contacto de la universidad
+        input("Pulsa una tecla para continuar")
+    elif opcion == "12":
+        print("Consultar información sobre intercambios.")
+        # Función para consultar información sobre intercambios
+        input("Pulsa una tecla para continuar")
+    elif opcion == "13":
+        print("Consultar Semilleros de Investigación.")
+        # Función para consultar semilleros disponibles
+        input("Pulsa una tecla para continuar")
+    elif opcion == "14":
+        print("Generar Reporte Académico General.")
+        # Función para generar reporte académico basico
+        input("Pulsa una tecla para continuar")
+    elif opcion == "15":
+        print("Créditos Faltantes para Grado.")
+        # Función para ver información sobre créditos faltantes
+        input("Pulsa una tecla para continuar")
+    elif opcion == "16":
+        print("Consultar Horarios y Rutas de los Buses.")
+        # Función para consultar horarios y rutas del bus
+        input("Pulsa una tecla para continuar")
+    elif opcion == "17":
+        print("Registro de Niveles de inglés.")
+        # Función para registrar niveles de inglés crusados
+        input("Pulsa una tecla para continuar")
+    elif opcion == "18":
+        print("Saliendo del sistema...")
+        break
+    else:
+        print("Opción no válida. Intente de nuevo.")
