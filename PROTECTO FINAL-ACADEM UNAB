@@ -1,1 +1,568 @@
+import os
+import datetime
+
+def limpiar_pantalla(): 
+    if os.name == 'nt': os.system('cls')
+
+# Datos 
+estudiantes = {}
+notas = {}
+noticias = []
+eventos = []
+horas_libres = {}
+cursos_informatica = {}
+niveles_ingles = {}
+quejas_reclamos = {}
+sanciones = {}
+actualizaciones_bus = []
+
+#Menú principal
+def mostrar_menu():
+    print("\n--- Menú Principal ---")
+    print("1. Registrar Estudiante")
+    print("2. Login")
+    print("3. Gestionar Créditos")
+    print("4. Calcular Promedio")
+    print("5. Ver Créditos Restantes")
+    print("6. Ver Programas")
+    print("7. Noticias")
+    print("8. Horas Libres")
+    print("9. Cursos de Informática")
+    print("10. Niveles de Inglés")
+    print("11. Eventos")
+    print("12. Consultar Rutas del Bus y Actualizaciones")
+    print("13. Consultar Sanciones")
+    print("14. Registro de Quejas y Reclamos")
+    print("15. Bienestar Universitario")
+    print("16. Reporte Académico")
+    print("17. Calculadora de Notas")
+    print("18. Salir")
+
+
+#Registrar estudiantes
+def registrar_estudiante():
+    id = input("Introduzca el ID del estudiante >> ")
+    if id in estudiantes:
+        print("Este ID ya está registrado.")
+        return
+    nombre = input("Introduzca el nombre del estudiante >> ")
+    correo = input("Introduzca el correo del estudiante >> ")
+    cedula = input("Introduzca la cédula del estudiante >> ")
+    carrera = input("Introduzca la carrera del estudiante >> ")
+    estudiantes[id] = {
+        'nombre': nombre, 
+        'correo': correo, 
+        'cedula': cedula, 
+        'carrera': carrera, 
+        'creditos': 0,
+        'noticias': False,
+        'bienestar': []
+    }
+    print("Estudiante registrado exitosamente.")
+
+#Login
+def login():
+    id_usuario = input("Por favor, introduzca su ID >> ")
+    if id_usuario in estudiantes:
+        print(f"Bienvenido, {estudiantes[id_usuario]['nombre']}.")
+        return id_usuario
+    else:
+        print("ID no encontrado. Por favor, registre primero al estudiante.")
+        return None
+
+#Gestionar créditos
+def gestionar_creditos(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    if id_usuario not in estudiantes:
+        print("El estudiante no está registrado. Regístrelo primero.")
+        return
+    print("Gestionar créditos:")
+    creditos_cursados = int(input("Introduzca los créditos cursados >> "))
+    estudiantes[id_usuario]['creditos'] += creditos_cursados
+    carrera = estudiantes[id_usuario]['carrera']
+    total_creditos = obtener_creditos_totales(carrera)
+    if total_creditos == 0:
+        print("Error: Carrera no encontrada en el sistema.")
+        return
+    porcentaje = (estudiantes[id_usuario]['creditos'] / total_creditos) * 100
+    print(f"Créditos cursados: {estudiantes[id_usuario]['creditos']}")
+    print(f"Porcentaje de progreso: {porcentaje:.2f}%")
+    print(f"Créditos restantes: {total_creditos - estudiantes[id_usuario]['creditos']}")
+
+def obtener_creditos_totales(carrera):
+    carreras_creditos = {
+        "Medicina": 302, "Psicología": 160, "Enfermería": 161, "Derecho": 175,
+        "Artes audiovisuales": 147, "Comunicación social": 159, "Gastronomía y Alta cocina": 136,
+        "Licenciatura en Educación Infantil": 160, "Música": 161,
+        "Administración de empresas": 144, "Contaduría Publica": 144, "Economía": 144,
+        "Marketing": 144, "Negocios Internacionales": 153, "Ingeniería Biomédica": 153,
+        "Ingeniería de Sistemas": 151, "Ingeniería Industrial": 137,
+        "Ingeniería en Energías y sostenibilidad": 154, "Ingeniería Financiera": 153,
+        "Ingeniería Mecatrónica": 154
+    }
+    return carreras_creditos.get(carrera, 0)
+
+#Cálculo de promedios
+def calcular_promedio(id_usuario):
+    if id_usuario is None:
+        return
+    while True:
+        print("\n--- Calcular Promedio ---")
+        print("1. Promedio por Mes")
+        print("2. Promedio por Semestre")
+        print("3. Promedio por Año")
+        print("4. Promedio Acumulado (PGA)")
+        print("5. Regresar al Menú Principal")
+        opcion = input("Seleccione una opción >> ")
+        if opcion == "1":
+            promedio_por_mes(id_usuario)
+        elif opcion == "2":
+            promedio_por_semestre(id_usuario)
+        elif opcion == "3":
+            promedio_por_año(id_usuario)
+        elif opcion == "4":
+            promedio_acumulado(id_usuario)
+        elif opcion == "5":
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+def promedio_por_mes(id_usuario):
+    materias = int(input("Ingrese el número de materias cursadas este mes >> "))
+    suma_notas = 0
+    for i in range(materias):
+        nota = float(input(f"Ingrese la nota de la materia {i+1} >> "))
+        suma_notas += nota
+    promedio = suma_notas / materias
+    print(f"Promedio por mes: {promedio:.2f}")
+
+def promedio_por_semestre(id_usuario):
+    semestres = int(input("Ingrese el número de semestres >> "))
+    suma_notas = 0
+    for i in range(semestres):
+        nota = float(input(f"Ingrese la nota del semestre {i+1} >> "))
+        suma_notas += nota
+    promedio = suma_notas / semestres
+    print(f"Promedio por semestre: {promedio:.2f}")
+
+def promedio_por_año(id_usuario):
+    años = int(input("Ingrese el número de años >> "))
+    suma_notas = 0
+    for i in range(años * 2):  # Asumiendo 2 semestres por año
+        nota = float(input(f"Ingrese la nota del semestre {i+1} >> "))
+        suma_notas += nota
+    promedio = suma_notas / (años * 2)
+    print(f"Promedio por año: {promedio:.2f}")
+
+def promedio_acumulado(id_usuario):
+    suma_notas = 0
+    num_notas = len(notas.get(id_usuario, []))
+    for nota in notas.get(id_usuario, []):
+        suma_notas += nota
+    if num_notas > 0:
+        promedio = suma_notas / num_notas
+        print(f"Promedio acumulado (PGA): {promedio:.2f}")
+    else:
+        print("No hay notas registradas para calcular el promedio acumulado.")
+
+def registrar_nota(id_usuario):
+    materias = int(input("Ingrese el número de materias >> "))
+    notas[id_usuario] = []
+    for i in range(materias):
+        nota = float(input(f"Ingrese la nota de la materia {i+1} >> "))
+        notas[id_usuario].append(nota)
+    print("Notas registradas exitosamente.")
+
+#Créditos restantes
+def ver_creditos_restantes(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    carrera = estudiantes[id_usuario]['carrera']
+    total_creditos = obtener_creditos_totales(carrera)
+    creditos_restantes = total_creditos - estudiantes[id_usuario]['creditos']
+    print(f"Créditos restantes para la carrera de {carrera}: {creditos_restantes}")
+
+#PROGRAMAS PRESENCIALES DE LA UNAB
+def ver_programas():
+    print("\n--- Programas UNAB y sus Créditos ---")
+    programas = {
+        "Medicina": 302, "Psicología": 160, "Enfermería": 161, "Derecho": 175,
+        "Artes audiovisuales": 147, "Comunicación social": 159, "Gastronomía y Alta cocina": 136,
+        "Licenciatura en Educación Infantil": 160, "Música": 161,
+        "Administración de empresas": 144, "Contaduría Publica": 144, "Economía": 144,
+        "Marketing": 144, "Negocios Internacionales": 153, "Ingeniería Biomédica": 153,
+        "Ingeniería de Sistemas": 151, "Ingeniería Industrial": 137,
+        "Ingeniería en Energías y sostenibilidad": 154, "Ingeniería Financiera": 153,
+        "Ingeniería Mecatrónica": 154
+    }
+    for programa, creditos in programas.items():
+        print(f"{programa}: {creditos} créditos")
+
+#NOTICIAS
+def gestionar_noticias():
+    while True:
+        print("\n--- Gestión de Noticias ---")
+        print("1. Ver Noticias")
+        print("2. Registrar Nueva Noticia")
+        print("3. Inscribirse a Noticias")
+        print("4. Darse de Baja de Noticias")
+        print("5. Regresar al Menú Principal")
+        opcion = input("Seleccione una opción >> ")
+        if opcion == "1":
+            ver_noticias()
+        elif opcion == "2":
+            registrar_noticia()
+        elif opcion == "3":
+            inscribirse_noticias()
+        elif opcion == "4":
+            darse_de_baja_noticias()
+        elif opcion == "5":
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+#ver noticias
+def ver_noticias():
+    print("\n--- Noticias ---")
+    if not noticias:
+        print("No hay noticias registradas.")
+    else:
+        for noticia in noticias:
+            print(f"Fecha: {noticia['fecha']}, Título: {noticia['titulo']}, Contenido: {noticia['contenido']}")
+
+#registrar una noticia
+def registrar_noticia():
+    fecha = input("Ingrese la fecha de la noticia (dd/mm/yyyy) >> ")
+    titulo = input("Ingrese el título de la noticia >> ")
+    contenido = input("Ingrese el contenido de la noticia >> ")
+    noticias.append({'fecha': fecha, 'titulo': titulo, 'contenido': contenido})
+    print("Noticia registrada exitosamente.")
+
+#inscribirse a noticias
+def inscribirse_noticias():
+    id_usuario = input("Ingrese su ID de estudiante >> ")
+    if id_usuario in estudiantes:
+        estudiantes[id_usuario]['noticias'] = True
+        print("Inscripción a noticias exitosa.")
+    else:
+        print("ID de estudiante no encontrado.")
+
+#darse de baja de noticias
+def darse_de_baja_noticias():
+    id_usuario = input("Ingrese su ID de estudiante >> ")
+    if id_usuario in estudiantes:
+        estudiantes[id_usuario]['noticias'] = False
+        print("Dado de baja de las noticias exitosamente.")
+    else:
+        print("ID de estudiante no encontrado.")
+
+#registrar horas libres
+def registrar_horas_libres(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    horas = int(input("Ingrese las horas libres cursadas >> "))
+    if id_usuario in horas_libres:
+        horas_libres[id_usuario] += horas
+    else:
+        horas_libres[id_usuario] = horas
+    if horas_libres[id_usuario] >= 96:
+        print("Todas las horas libres han sido completadas.")
+    else:
+        print(f"Horas libres registradas: {horas_libres[id_usuario]}")
+
+#ver horas libres
+def ver_horas_libres(id_usuario):
+    if id_usuario in horas_libres:
+        print(f"Horas libres registradas: {horas_libres[id_usuario]}")
+        if horas_libres[id_usuario] >= 96:
+            print("Todas las horas libres han sido completadas.")
+    else:
+        print("No se han registrado las horas libres del estudiante.")
+
+#registrar cursos de informática
+def registrar_cursos_informatica(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    cursos = ['Vida en línea', 'MS WORD', 'MS EXCEL', 'MS POWERPOINT', 'CULTURA DIGITAL']
+    completados = int(input("Ingrese la cantidad de cursos completados >> "))
+    if id_usuario not in cursos_informatica:
+        cursos_informatica[id_usuario] = []
+    for i in range(completados):
+        curso = input(f"Ingrese el nombre del curso {i+1} >> ")
+        if curso in cursos and curso not in cursos_informatica[id_usuario]:
+            cursos_informatica[id_usuario].append(curso)
+        else:
+            print("Curso inválido o ya registrado.")
+    if len(cursos_informatica[id_usuario]) >= 5:
+        print("Todos los cursos necesarios de informática han sido completados.")
+
+#ver cursos de informática
+def ver_cursos_informatica(id_usuario):
+    if id_usuario in cursos_informatica:
+        print(f"Cursos de informática completados: {', '.join(cursos_informatica[id_usuario])}")
+        if len(cursos_informatica[id_usuario]) >= 5:
+            print("Todos los cursos necesarios de informática han sido completados.")
+    else:
+        print("No se han registrado los cursos del estudiante.")
+
+#registrar niveles de inglés
+def registrar_niveles_ingles(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    niveles = ['A1 BASIC BREAKTHROUGH', 'A2-1 WAYSTAGE 1', 'A2-2 WAYSTAGE 2', 'B1-1 THRESHOLD 1', 'B1-2 THRESHOLD 2', 'B2-1 VANTAGE 1', 'B2-2 VANTAGE 2']
+    nivel_actual = input("Ingrese el nivel de inglés alcanzado >> ")
+    if nivel_actual in niveles:
+        niveles_ingles[id_usuario] = nivel_actual
+        print("Nivel de inglés registrado exitosamente.")
+    else:
+        print("Nivel de inglés inválido.")
+
+#ver niveles de inglés
+def ver_niveles_ingles(id_usuario):
+    if id_usuario in niveles_ingles:
+        print(f"Nivel de inglés alcanzado: {niveles_ingles[id_usuario]}")
+    else:
+        print("No se ha registrado el nivel de inglés del estudiante.")
+
+#registrar eventos
+def registrar_evento():
+    fecha = input("Ingrese la fecha del evento (dd/mm/yyyy) >> ")
+    hora = input("Ingrese la hora del evento (hh:mm) >> ")
+    titulo = input("Ingrese el título del evento >> ")
+    descripcion = input("Ingrese la descripción del evento >> ")
+    eventos.append({'fecha': fecha, 'hora': hora, 'titulo': titulo, 'descripcion': descripcion})
+    print("Evento registrado exitosamente.")
+
+#ver eventos
+def ver_eventos():
+    print("\n--- Eventos ---")
+    if not eventos:
+        print("No hay eventos registrados.")
+    else:
+        for evento in eventos:
+            print(f"Fecha: {evento['fecha']} Hora: {evento['hora']}, Título: {evento['titulo']}, Descripción: {evento['descripcion']}")
+
+#registrar actualizaciones del bus
+def registrar_actualizacion_bus():
+    actualizacion = input("Ingrese la actualización del bus >> ")
+    fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    actualizaciones_bus.insert(0, {'fecha': fecha, 'actualizacion': actualizacion})
+    if len(actualizaciones_bus) > 6:
+        actualizaciones_bus.pop()
+    print("Actualización registrada exitosamente.")
+
+#ver actualizaciones del bus
+def ver_actualizaciones_bus():
+    print("\n--- Actualizaciones del Bus ---")
+    if not actualizaciones_bus:
+        print("No hay actualizaciones registradas.")
+    else:
+        for actualizacion in actualizaciones_bus:
+            print(f"Fecha: {actualizacion['fecha']}, Actualización: {actualizacion['actualizacion']}")
+
+#ver rutas del bus
+def ver_rutas_bus():
+    print("\n--- Rutas del Bus ---")
+    print("\nRuta 1:")
+    print("• UNAB El Jardín\n• Puente peatonal UNAB\n• Centro de Servicios Universitarios (CSU)\n• Calle 45 con Cra. 55, barrio Terrazas\n• Calle 56 con Cra. 46, barrio Terrazas\n• Calle 56 con Cra. 34, Margo\n• Clínica Bucaramanga\n• Gratamira\n• Parque San Pio\n• Campus Rafael Ardila Duarte\n• Calle 48 con Cra. 35a, Iroka\n• Arturo Calle")
+
+    print("\nRuta 2:")
+    print("• Av. El jardín bloque L\n• Frente a la Clínica Bucaramanga\n• Torres de Monterrey\n• Diamante II\n• Puente Provenza\n• Facultad de Ciencias de la Salud\n• CC. Parque Caracolí\n• CC. Cacique\n• Garabatos\n• Arturo Calle\n• Motocenter Suzuki\n• CC. Cañaveral\n• Puente Peatonal UNAB\n• Más por menos")
+
+#registrar sanciones
+def registrar_sancion(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    sancion = input("Ingrese la razón de la sanción >> ")
+    if id_usuario not in sanciones:
+        sanciones[id_usuario] = []
+    sanciones[id_usuario].append(sancion)
+    print("Sanción registrada exitosamente.")
+
+#ver sanciones
+def ver_sanciones(id_usuario):
+    if id_usuario in sanciones:
+        print(f"Sanciones registradas: {', '.join(sanciones[id_usuario])}")
+    else:
+        print("No hay sanciones registradas para este estudiante.")
+
+#registrar quejas y reclamos
+def registrar_queja_reclamo():
+    categoria = input("Seleccione la categoría de la queja/reclamo (1. Universidad, 2. Curso, 3. Docente, 4. Atención al cliente, 5. Personal Administrativo, 6. Otros servicios) >> ")
+    contenido = input("Ingrese el contenido de la queja/reclamo >> ")
+    if categoria not in quejas_reclamos:
+        quejas_reclamos[categoria] = []
+    quejas_reclamos[categoria].append(contenido)
+    print("Queja/reclamo registrada exitosamente.")
+
+#ver quejas y reclamos
+def ver_quejas_reclamos():
+    categoria = input("Seleccione la categoría para ver quejas/reclamos (1. Universidad, 2. Curso, 3. Docente, 4. Atención al cliente, 5. Personal Administrativo, 6. Otros servicios) >> ")
+    if categoria in quejas_reclamos:
+        print(f"--- Quejas/Reclamos en la categoría {categoria} ---")
+        for queja in quejas_reclamos[categoria]:
+            print(queja)
+    else:
+        print("No hay quejas/reclamos en esta categoría.")
+
+#registrar requisitos de bienestar universitario
+def registrar_bienestar(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    requisitos = ['TALLER DE DESARROLLO-HUMANO', 'TALLER RECREACION CULT Y DEPOR', 'ACTIVIDADES LIBRES', 'DESARROLLO COMPETENCIA EMPLEABILIDAD']
+    completados = int(input("Ingrese la cantidad de requisitos de bienestar completados >> "))
+    if 'bienestar' not in estudiantes[id_usuario]:
+        estudiantes[id_usuario]['bienestar'] = []
+    for i in range(completados):
+        requisito = input(f"Ingrese el nombre del requisito {i+1} >> ")
+        if requisito in requisitos and requisito not in estudiantes[id_usuario]['bienestar']:
+            estudiantes[id_usuario]['bienestar'].append(requisito)
+        else:
+            print("Requisito inválido o ya registrado.")
+    if len(estudiantes[id_usuario]['bienestar']) >= 4:
+        print("Todos los requisitos de bienestar universitario han sido completados.")
+
+#requisitos de bienestar universitario
+def ver_bienestar(id_usuario):
+    if id_usuario in estudiantes and 'bienestar' in estudiantes[id_usuario]:
+        print(f"Requisitos de bienestar completados: {', '.join(estudiantes[id_usuario]['bienestar'])}")
+        if len(estudiantes[id_usuario]['bienestar']) >= 4:
+            print("Todos los requisitos de bienestar universitario han sido completados.")
+    else:
+        print("No se han registrado los requisitos de bienestar del estudiante.")
+
+#generar reporte académico
+def generar_reporte(id_usuario):
+    if id_usuario is None:
+        print("Debes iniciar sesión primero.")
+        return
+    if id_usuario in estudiantes:
+        estudiante = estudiantes[id_usuario]
+        print("\n--- Reporte Académico ---")
+        print(f"Nombre: {estudiante['nombre']}")
+        print(f"ID: {id_usuario}")
+        print(f"Carrera: {estudiante['carrera']}")
+        print(f"Créditos cursados: {estudiante['creditos']}")
+        print(f"Horas libres completadas: {horas_libres.get(id_usuario, 0)}")
+        print(f"Cursos de informática completados: {', '.join(cursos_informatica.get(id_usuario, []))}")
+        print(f"Niveles de inglés completados: {niveles_ingles.get(id_usuario, 'N/A')}")
+        print(f"Requisitos de bienestar completados: {', '.join(estudiantes[id_usuario].get('bienestar', []))}")
+        print(f"Promedio acumulado: {promedio_acumulado(id_usuario):.2f}")
+    else:
+        print("Estudiante no encontrado.")
+
+#calculadora de notas
+def calculadora_notas():
+    materias = int(input("Ingrese el número de materias >> "))
+    total_notas = 0
+    total_porcentajes = 0
+    for i in range(materias):
+        nota = float(input(f"Ingrese la nota de la materia {i+1} >> "))
+        porcentaje = float(input(f"Ingrese el porcentaje de la materia {i+1} >> "))
+        total_notas += nota * (porcentaje / 100)
+        total_porcentajes += porcentaje
+    print(f"Nota acumulada: {total_notas:.2f}")
+    print(f"Porcentaje completado: {total_porcentajes}%")
+    if total_porcentajes < 100:
+        nota_necesaria = (100 - total_porcentajes) / 100
+        print(f"Necesitas una nota de: {nota_necesaria:.2f} en el porcentaje restante.")
+
+# Ejecución del menú principal
+def menu_principal():
+    print("¡Bienvenido a ACADEM, al sistema de gestión de Créditos para Grado UNAB!")
+    print("Por favor, seleccione su perfil para continuar.\n")
+    perfil = input("Escriba '1' si es Personal Administrativo, '2' si es Estudiante >> ")
+
+    if perfil == "1":
+        print("\nBienvenido, Personal Administrativo.")
+        id_usuario = input("Por favor, introduzca su ID de trabajador >> ")
+    elif perfil == "2":
+        print("\nBienvenido, Estudiante.")
+        id_usuario = input("Por favor, introduzca su ID de estudiante >> ")
+        # Comprobar si el estudiante está registrado, si no, registrarlo
+        if id_usuario not in estudiantes:
+            registrar_estudiante()
+    else:
+        print("Perfil no válido. Por favor, reinicie el sistema e intente nuevamente.")
+        return
+
+    input("Presione Enter para desplegar el menú de opciones...")
+
+    while True:
+        mostrar_menu()
+        opcion = input("Por favor inserte un número >> ")
+        if opcion == "1":
+            registrar_estudiante()
+        elif opcion == "2":
+            id_usuario = login()
+        elif opcion == "3":
+            gestionar_creditos(id_usuario)
+        elif opcion == "4":
+            calcular_promedio(id_usuario)
+        elif opcion == "5":
+            ver_creditos_restantes(id_usuario)
+        elif opcion == "6":
+            ver_programas()
+        elif opcion == "7":
+            gestionar_noticias()
+        elif opcion == "8":
+            if perfil == "1":
+                registrar_horas_libres(id_usuario)
+            else:
+                ver_horas_libres(id_usuario)
+        elif opcion == "9":
+            if perfil == "1":
+                registrar_cursos_informatica(id_usuario)
+            else:
+                ver_cursos_informatica(id_usuario)
+        elif opcion == "10":
+            if perfil == "1":
+                registrar_niveles_ingles(id_usuario)
+            else:
+                ver_niveles_ingles(id_usuario)
+        elif opcion == "11":
+            if perfil == "1":
+                registrar_evento()
+            else:
+                ver_eventos()
+        elif opcion == "12":
+            ver_rutas_bus()
+            ver_actualizaciones_bus()
+            if perfil == "2":
+                registrar_actualizacion_bus()
+        elif opcion == "13":
+            if perfil == "1":
+                registrar_sancion(id_usuario)
+            else:
+                ver_sanciones(id_usuario)
+        elif opcion == "14":
+            if perfil == "1":
+                ver_quejas_reclamos()
+            else:
+                registrar_queja_reclamo()
+        elif opcion == "15":
+            if perfil == "1":
+                registrar_bienestar(id_usuario)
+            else:
+                ver_bienestar(id_usuario)
+        elif opcion == "16":
+            generar_reporte(id_usuario)
+        elif opcion == "17":
+            calculadora_notas()
+        elif opcion == "18":
+            print("Saliendo del sistema. ¡Hasta luego!")
+            break
+        else:
+            print("Opción no válida. Por favor, intente nuevamente.")
+
+# Iniciar el menú principal nuevamente 
+menu_principal()
 
